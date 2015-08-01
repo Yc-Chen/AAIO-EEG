@@ -109,9 +109,9 @@ for subject in subjects:
     
     ################ CSP Filters training #####################################
     # get event posision corresponding to Replace
-    events = find_events(raw,stim_channel='Replace', verbose=False)
+    events = find_events(raw,stim_channel='BothReleased', verbose=False)
     # epochs signal for 1.5 second before the movement
-    epochs = Epochs(raw, events, {'during' : 1}, -2, -0.5, proj=False,
+    epochs = Epochs(raw, events, {'during' : 1}, -3, -0.5, proj=False,
                     picks=picks, baseline=None, preload=True,
                     add_eeg_ref=False, verbose=False)
     
@@ -120,7 +120,7 @@ for subject in subjects:
     
     # epochs signal for 1.5 second after the movement, this correspond to the 
     # rest period.
-    epochs_rest = Epochs(raw, events, {'after' : 1}, 0.5, 2, proj=False,
+    epochs_rest = Epochs(raw, events, {'after' : 1}, 0.5, 3, proj=False,
                     picks=picks, baseline=None, preload=True,
                     add_eeg_ref=False, verbose=False)
     
