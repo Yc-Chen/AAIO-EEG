@@ -20,7 +20,7 @@ from sklearn.metrics import roc_auc_score
 #############function to read data###########
 FNAME = "../30 Data/{0}/subj{1}_series{2}_{3}.csv"
 def load_data(subj, series=range(1,9), prefix = 'train'):
-    data = [pd.read_csv(FNAME.format('train',subject,s,'data'), index_col=0) for s in series]
+    data = [pd.read_csv(FNAME.format(prefix,subject,s,'data'), index_col=0) for s in series]
     idx = [d.index for d in data]
     data = [d.values.astype(float) for d in data]
     if prefix == 'train':
@@ -33,7 +33,9 @@ def compute_features(X, scale=None):
     X0 = [x[:,0] for x in X]
     X = np.concatenate(X, axis=0)
     F = [];
-    for fc in np.linspace(0,1,11)[1:]:
+#    fcrange = np.linspace(0,1,11)[1:]
+    fcrange = np.linspace(0,1,12)[1:]
+    for fc in fcrange:
         b,a = butter(3,fc/250.0,btype='lowpass')
         F.append(np.concatenate([lfilter(b,a,x0) for x0 in X0], axis=0)[:,np.newaxis])
     F = np.concatenate(F, axis=1)
@@ -58,9 +60,9 @@ idx_tot = []
 scores_tot = []
 
 ###loop on subjects and 8 series for train data + 2 series for test data
-for subject in subjects[:1]:
+for subject in subjects:
 
-    X_train, y = load_data(subject, range(1,7))
+    X_train, y = load_data(subject, range(1,9))
 #    X_test, idx = load_data(subject,[9,10],'test')
     X_test, idx = load_data(subject,[7,8], 'test')
 
