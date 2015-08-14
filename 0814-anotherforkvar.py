@@ -29,14 +29,18 @@ def load_data(subj, series=range(1,9), prefix = 'train'):
 
 def compute_features(X, scale=None):
     X0 = [x[:,0] for x in X]
+    X1 = [x[:,1] for x in X]
     X = np.concatenate(X, axis=0)
     F = [];
     fcrange = np.linspace(0,1,12)[1:]
     for fc in fcrange:
         b,a = butter(3,fc/250.0,btype='lowpass')
         F.append(np.concatenate([lfilter(b,a,x0) for x0 in X0], axis=0)[:,np.newaxis])
+        F.append(np.concatenate([lfilter(b,a,x1) for x1 in X1], axis=0)[:,np.newaxis]) #added in var
     F = np.concatenate(F, axis=1)
     F = np.concatenate((X,F,F**2), axis=1)
+    #added in var
+    F = F[:, 2:]
         
     if scale is None:    
         scale = StandardScaler()
